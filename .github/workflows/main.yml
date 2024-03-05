@@ -19,14 +19,28 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
+    - name: Print ECR Login Output
+      run: |
+        echo "ECR Registry URL: ${{ steps.login-ecr.outputs.registry }}"
+
     - name: Build, tag, and push image to Amazon ECR
       run: |
-        echo "ECR Registry: ${{ steps.login-ecr.outputs.registry }}"
-        echo "ECR Repository: ${{ secrets.AWS_ECR_REPOSITORY }}"
-        IMAGE_URI="${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest"
-        echo "Image URI: $IMAGE_URI"
+        ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY=${{ secrets.AWS_ECR_REPOSITORY }}
+        IMAGE_TAG=latest
+        IMAGE_URI="${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}"
+
+        echo "Building image with tag: $IMAGE_URI"
         docker build -t $IMAGE_URI .
+        
+        echo "Pushing image to ECR"
         docker push $IMAGE_URI
+        if [ $? -eq 0 ]; then
+          echo "Docker push succeeded"
+        else
+          echo "Docker push failed"
+          exit 1
+        fi
 
     - name: Update Lambda function
       uses: appleboy/lambda-action@master
@@ -34,5 +48,5 @@ jobs:
         aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws_region: us-east-1
-        function_name: YOUR_LAMBDA_FUNCTION_NAME
-        image_uri: ${{ secrets.AWS_ECR_REPOSITORY }}:latest
+        function_name: YOUR_LAMBDA_FUNCTION_NAME  # Replace with your Lambda function name
+        image_uri: "${{ secrets.AWS_ECR_REPOSITORY }}:latest"
