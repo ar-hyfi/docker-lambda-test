@@ -55,7 +55,7 @@ jobs:
         aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws_region: us-east-2
-        function_name: lambda_handler
+        function_name: github_docker_test
         image_uri: "${{ secrets.AWS_ECR_REPOSITORY }}:latest"
 
 
