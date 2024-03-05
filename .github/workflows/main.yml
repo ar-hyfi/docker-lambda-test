@@ -9,7 +9,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      AWS_REGION: us-east-1
+      AWS_REGION: us-east-1  # Define AWS region here
 
     steps:
     - name: Checkout code
@@ -26,8 +26,6 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPOSITORY }}
         IMAGE_TAG: latest
-        AWS_REGION: us-east-1  # Set the AWS region here
-
       run: |
         docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REPOSITORY:$IMAGE_TAG
@@ -37,6 +35,6 @@ jobs:
       with:
         aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws_region: us-east-1 # Set your AWS region here
-        function_name: lambda_handler # Set your Lambda function name here
+        aws_region: us-east-1 # AWS region for the Lambda function
+        function_name: lambda_handler # Your Lambda function name
         image_uri: ${{ secrets.AWS_ECR_REPOSITORY }}:latest
