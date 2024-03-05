@@ -56,6 +56,6 @@ jobs:
         aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws_region: us-east-2
         function_name: github_docker_test
-        image_uri: "${{ secrets.AWS_ECR_REPOSITORY }}:latest"
+        image_uri: $IMAGE_URI
 
 
