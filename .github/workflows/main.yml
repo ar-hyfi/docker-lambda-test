@@ -9,7 +9,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      AWS_REGION: us-east-1
+      AWS_REGION: us-east-2
 
     steps:
     - name: Checkout code
@@ -42,14 +42,14 @@ jobs:
           exit 1
         fi
       env:
-        AWS_REGION: us-east-1
+        AWS_REGION: us-east-2
 
     - name: Update Lambda function
       uses: appleboy/lambda-action@master
       with:
         aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws_region: us-east-1
+        aws_region: us-east-2
         function_name: lambda_handler  # Replace with your Lambda function name
         image_uri: "${{ secrets.AWS_ECR_REPOSITORY }}:latest"
 
